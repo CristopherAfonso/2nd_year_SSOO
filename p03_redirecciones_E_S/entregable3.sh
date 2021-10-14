@@ -6,6 +6,8 @@
 
 # Nota importante 1, yo tengo el ordenador en inglés, por eso el apartado
 # 2 y 4 las palabras que se buscan con grep están en ingles
+# Si su ordenador está en español, con cambiar las cadenas a su traduccion 
+# En español sería suficiente
 
 # Nota importante 2, para que este script funcione, debe ser ejecutado así:     source ./entregable3.sh
 # Si no se ejecuta así, aunque los comandos están bien, no se ejecutan
