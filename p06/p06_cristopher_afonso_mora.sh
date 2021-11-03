@@ -9,6 +9,8 @@ TIME_STAMP="Actualizada el $RIGHT_NOW por $USER"
 
 HELP="--help"
 filename=~/sysinfo.txt
+dofile=0
+interactive=0
 
 
 ##### Estilos
@@ -72,8 +74,7 @@ main_message()
 
 error_message()
 {
-  echo "Este programa no permite más de 1 parámetros pasado a la vez"
-  echo "(excepto el -f que acepta un segundo paramétro a su derecha)"
+  echo "Este programa no permite más de 4 parámetros pasado a la vez"
   echo "Pruebe '$0 $HELP' para más información"
 }
 
@@ -85,36 +86,52 @@ error_file()
 
 error_parameter()
 {
-  echo "Warning! el paramétro pasado a la función no es válido"
+  echo "Warning! el/los paramétros pasados a la función no son válidos"
   echo "Pruebe '$0 $HELP' para más información"
 }
 
 usage() # Función que explica el modo de uso del programa
 {
-  echo "Modo de uso: $0 [-f filename] [-i] [-h]"
+  echo "Este script genera automáticamente un informe de estado del sistema"
+  echo "y solo admite 3 opciones a la hora de ser usado."
+  echo "Si usa '-h' ó '--help', no importa el resto de opciones que acompañen"
+  echo "al programa, este mostrará un mensaje de ayuda (este mesaje) y se"
+  echo "cerrará. Si usa '-i' ó '--interactive', entonces se abre la interfaz"
+  echo "interactiva y elegirá lo que quiere hacer con el archivo sobre la"
+  echo "marcha. Si usa '-f' ó '--file', entonces esta opción debe ir"
+  echo "obligadamente acompañada de un nombre de archivo, porque ese nombre"
+  echo "será el nombre que se le pondrá al archivo una vez generado,"
+  echo "evidentemente, si usted pone por ejemplo '... -f -i ...'"
+  echo "'-i' al ser una opción más del programa, no será aceptada y habrá"
+  echo "un error. Las únicas opciones compatibles son '-i' | '--interactive',"
+  echo "con '-f' | '--file', si se llaman a la vez, se abrirá la interfaz"
+  echo "interactiva pero el nombre por defecto será el elegido por usted"
+  echo "previamente al llamar a la opción '-f'. Antes de cerrar este mensaje"
+  echo "de ayuda, le doy este recordatorio."
+  echo "Modo de uso del programa: $0 [-f filename] | [-i] | [-h]"
 }
 
 interactive_interface() # Funcion de Actividad 4
 {
   while [ true ]; do
-    echo -e "Elija entre estas tres opciones:"
+    echo "Elija entre estas tres opciones:"
     echo "Opción 1: Solo mostrar el informe por pantalla y cerrar el programa"
     echo "Opción 2: Solo guardar el informe con el nombre elegido y cerrar el programa"
     echo "Opción 3: Cerrar el programa ahora mismo sin hacer nada" # Metí esta opción porque quise
     echo "Introduzca 1, 2 ó 3 para realizar su elección, cualquier otra opción será rechazada"
     read selection
-    echo -e "\n"
+    echo  ""
     case $selection in 
       1 )
         write_page
         break
         ;;
       2 )
-        echo "Introduzca el nombre del archivo[~/sysinfo.txt]:"
-        read filename
+        echo "Introduzca el nombre del archivo[$filename]:"
+        read selection
         echo ""
-        if [ "$filename" == "" ]; then
-          filename=~/sysinfo.txt
+        if [ "$selection" != "" ]; then
+          filename=$selection
         fi
         if [ -f "$filename" ]; then
           while [ true ]; do
@@ -157,53 +174,63 @@ if [ $# -eq 0 ]; then
   exit 0
 fi
 
-if [ $# -gt 2 ]; then
+if [ $# -gt 4 ]; then
   error_message
   exit 1
 fi
 
-# Actividad 3: Opción -f
-if [ "$2" == "" ]; then 
-  if [ "$1" == "-f" ]; then
-    write_page > $filename
-    exit 0
-  elif [ "$1" == "--file" ]; then
-    write_page > $filename
-    exit 0
-  fi
-else
-  if [ "$1" == "-f" ]; then
-    filename=$2
-    write_page > $filename
-    exit 0
-  elif [ "$1" == "--file" ]; then
-    filename=$2
-    write_page > $filename
-    exit 0
-  else 
-    error_parameter # Si $2 != "" y $1 no es ni -f ni --file, hay un error
-    exit 1
-  fi
-fi
+while [ "$1" != "" ]; do
+  case $1 in
+    -f | --file )
+      dofile=1
+      if [ "$2" != "" ]; then
+        if [ "$2" != "-h" ]; then
+          if [ "$2" != "-i" ]; then
+            if [ "$2" != "--help" ]; then
+              if [ "$2" != "--interactive" ]; then
+                filename=$2
+                shift
+              else 
+                error_file; exit 1
+              fi
+            else 
+              error_file; exit 1
+            fi
+          else 
+            error_file; exit 1
+          fi
+        else 
+          error_file; exit 1
+        fi
+      else 
+        error_file; exit 1
+      fi
+      ;;
+    -i | --interactive )
+      interactive=1
+      ;;
+    -h | --help )
+      usage
+      exit 0
+      ;;
+    * )
+      error_parameter
+      exit 1
+      ;;
+  esac
+  shift
+done
 
-# Actividad 3: Opción -h
-if [ "$1" == "$HELP" ]; then
-  usage
-  exit 0
-elif [ "$1" == "-h" ]; then
-  usage 
-  exit 0
-fi
-
-# Actividad 4: Opción -i
-if [ "$1" == "--interactive" ]; then
+if [ $interactive -eq 1 ]; then
   interactive_interface
   exit 0
-elif [ "$1" == "-i" ]; then
-  interactive_interface
+fi
+
+if [ $dofile -eq 1 ]; then
+  write_page > $filename
   exit 0
 fi
 
-error_parameter # Si solo hay un parámetro pero no es ni -i ni -h ni -f, hay un error
-exit 1
+error_parameter # Se supone que el programa nunca va a llegar
+exit 1          # aquí, pero estas lineas están por si acaso
 
