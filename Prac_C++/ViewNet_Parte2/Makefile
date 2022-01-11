@@ -6,7 +6,7 @@
 # Practica del Bloque de C++: Practica de Programacion
 # @author Cristopher Manuel Afonso Mora
 # Correo: alu0101402031@ull.edu.es
-# @date 12/12/2021
+# @date 02/01/2022
 # 
 # @file Makefile
 # @brief Archivo que ayuda a facilitar el proceso de compilacion de los dos
@@ -19,13 +19,13 @@
 # 
 # @version 1.0
 # @brief Historial de Revisiones 
-# 12/12/21 - Creacion (primera version) del codigo:
+# 02/01/22 - Creacion (primera version) del codigo:
 #            Solo he creado el archivo.
-# 12/12/21 - Archivo terminado.
+# 02/01/22 - Archivo terminado.
 #
 
 CC = g++
-CFLAGS = -g -I -std=c++20 -Wall -Weffc++ -Wextra 
+CFLAGS = -g -I -std=c++17 -Wall -Weffc++ -Wextra 
 DEPS = Socket.h main_functions.h File.h # En DEPS van los archivos .h
 OBJ1 = main_send.o Socket.o File.o main_functions.o # En OBJ1 van todos los .cc pero con .o para compilar main_send.cc
 OBJ2 = main_receive.o Socket.o File.o main_functions.o # En OBJ2 van todos los .cc pero con .o para compilar main_receive.cc

@@ -7,7 +7,7 @@
  * Practica del Bloque de C++: Practica de Programacion
  * @author Cristopher Manuel Afonso Mora
  * Correo: alu0101402031@ull.edu.es
- * @date 12/12/2021
+ * @date 02/01/2022
  * 
  * @file main_send.cc 
  * @brief Programa cliente encagado de enviar los mensajes recibidos por el
@@ -20,9 +20,9 @@
  * 
  * @version 1.0
  * @brief Historial de Revisiones 
- * 12/12/21 - Creacion (primera version) del codigo:
+ * 02/01/22 - Creacion (primera version) del codigo:
  *            Solo he creado el archivo.
- * 14/12/21 - Archivo terminado.
+ * 02/01/22 - Archivo terminado.
  */
 
 #include "main_functions.h"
